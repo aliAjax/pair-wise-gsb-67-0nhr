@@ -25,6 +25,8 @@ const navigate = (id: string) => navigateTo(`/equipment/${id}`)
       <article><span>已合格</span><strong>{{ store.stats.passed }}</strong><small>测试条件与证据齐全</small></article>
       <article><span>不合格或待复验</span><strong>{{ store.stats.failed }}</strong><small>不可直接签署</small></article>
       <article><span>未闭环缺陷</span><strong>{{ store.stats.openDefects }}</strong><small>多方责任协同</small></article>
+      <article><span>有效责任链结论</span><strong>{{ store.conclusions.filter((c) => c.state === '有效' || c.state === '裁定胜出').length }}</strong><small>参与完整性判断</small></article>
+      <article><span>待确认/待裁定/失效</span><strong>{{ store.conclusions.filter((c) => ['待确认', '待裁定', '已失效', '裁定落选'].includes(c.state)).length }}</strong><small>不参与完整性判断</small></article>
     </div>
     <div class="toolbar">
       <InputText v-model="store.keyword" placeholder="搜索设备、编号、验收项或状态" />

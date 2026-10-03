@@ -56,3 +56,18 @@ export const seedAudit: AuditEntry[] = [
   { id: 'A-2', entityId: 'AD-260929-01', action: '分派缺陷', operator: '陆川', detail: '重大缺陷分派设备厂家，限期24小时', createdAt: '2026-09-29T09:10:00' },
   { id: 'A-3', entityId: 'AD-260929-02', action: '提交复验', operator: '罗宇', detail: '第1轮复测效率未达标', createdAt: '2026-09-28T17:10:00' }
 ]
+
+/** 迁移前旧系统遗留：只有姓名、没有授权时段与适用设备的签署记录 */
+export interface LegacySignature {
+  name: string
+  group: string
+  equipmentId: string
+  itemId: string
+  verdict: string
+  signedAt: string
+}
+
+export const seedLegacySignatures: LegacySignature[] = [
+  { name: '周慎', group: '继保专业组', equipmentId: 'EQ-GRID', itemId: 'IT-G1', verdict: '合格', signedAt: '2026-09-26T10:15:00' },
+  { name: '周慎', group: '继保专业组', equipmentId: 'EQ-INV11', itemId: 'IT-I1', verdict: '合格', signedAt: '2026-09-27T15:40:00' }
+]
