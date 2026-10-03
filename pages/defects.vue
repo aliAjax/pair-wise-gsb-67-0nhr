@@ -38,6 +38,11 @@ function decide(status: '已关闭' | '带条件通过' | '整改中') {
   const result = store.decideDefect(selected.value.id, status, retest.note)
   toast.add({ severity: result.ok ? 'success' : 'error', summary: result.message, life: 3000 })
 }
+function reopen() {
+  if (!selected.value) return
+  const result = store.reopenDefect(selected.value.id)
+  toast.add({ severity: result.ok ? 'warn' : 'error', summary: result.message, life: 3500 })
+}
 </script>
 
 <template>
@@ -54,7 +59,7 @@ function decide(status: '已关闭' | '带条件通过' | '整改中') {
       <Column header="版本"><template #body="{ data }">V{{ data.version }}</template></Column>
     </DataTable>
     <div v-if="selected" class="detail-panel">
-      <div class="detail-title"><div><span>{{ selected.id }} · {{ selected.equipmentId }}</span><h3>{{ selected.title }}</h3></div><div><Button label="多方回复" outlined @click="replyVisible = true" /><Button label="联合复验" @click="retestVisible = true" /></div></div>
+      <div class="detail-title"><div><span>{{ selected.id }} · {{ selected.equipmentId }}</span><h3>{{ selected.title }}</h3></div><div><Button label="多方回复" outlined @click="replyVisible = true" /><Button label="联合复验" @click="retestVisible = true" /><Button v-if="['已关闭', '带条件通过'].includes(selected.status)" label="重开缺陷" severity="danger" outlined @click="reopen" /></div></div>
       <div class="reply-list"><article v-for="item in selected.replies" :key="item.repliedAt"><Tag :value="item.party" /><strong>{{ item.owner }}</strong><p>{{ item.content }}</p><span>{{ item.evidence }} · {{ item.repliedAt.replace('T', ' ').slice(0, 16) }}</span></article></div>
       <div class="decision-band"><Textarea v-model="retest.note" rows="2" placeholder="验收决定说明，带条件接受时必须填写限制条件" /><Button label="通过并关闭" @click="decide('已关闭')" /><Button label="带条件接受" severity="secondary" outlined @click="decide('带条件通过')" /><Button label="退回整改" severity="danger" outlined @click="decide('整改中')" /></div>
     </div>

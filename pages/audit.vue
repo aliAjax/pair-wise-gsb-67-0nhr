@@ -17,7 +17,7 @@ const sign = () => {
   toast.add({ severity: result.ok ? 'success' : 'error', summary: result.ok ? '签署完成' : '完整性校验未通过', detail: result.message, life: 4000 })
 }
 const exportPackage = () => {
-  const payload = { plant: store.plant, equipment: store.equipment, defects: store.defects, audit: store.audit, preflight: store.preflight }
+  const payload = { plant: store.plant, equipment: store.equipment, defects: store.defects, audit: store.audit, authorizations: store.authorizations, conclusions: store.conclusions, signBatches: store.signBatches, chain: store.chain, preflight: store.preflight }
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })
   const url = URL.createObjectURL(blob); const anchor = document.createElement('a'); anchor.href = url; anchor.download = '光伏并网验收交付包.json'; anchor.click(); URL.revokeObjectURL(url)
 }
@@ -27,7 +27,7 @@ const exportPackage = () => {
   <section class="page">
     <div class="preflight-panel">
       <div><span>并网前完整性校验</span><strong>{{ store.preflight.allowed ? '全部条件满足' : `${store.preflight.blocking.length}项阻断` }}</strong><p v-for="item in store.preflight.blocking" :key="item">{{ item }}</p></div>
-      <div><Button label="导出交付包" outlined @click="exportPackage" /><Button label="签署并锁定版本" @click="sign" /></div>
+      <div class="sign-side"><span>{{ store.activeBatch ? `有效批次 ${store.activeBatch.batchNo} · 锁定${store.activeBatch.conclusionIds.length}条结论` : '当前无有效签署批次' }}</span><div><Button label="导出交付包" outlined @click="exportPackage" /><Button label="签署并锁定版本" @click="sign" /></div></div>
     </div>
     <div class="section-head"><div><h2>验收审计</h2><p>当前交付版本 V{{ store.plant.version }} · {{ store.plant.status }}</p></div><InputText v-model="keyword" placeholder="搜索实体、动作或操作人" /></div>
     <DataTable :value="rows" dataKey="id" size="small">

@@ -74,3 +74,60 @@ export interface AuditEntry {
   detail: string
   createdAt: string
 }
+
+export type AuthorizationStatus = '生效中' | '已撤销' | '待确认'
+
+export interface Authorization {
+  id: string
+  delegator: string
+  delegate: string
+  equipmentIds: string[]
+  validFrom: string
+  validTo: string
+  status: AuthorizationStatus
+  source: '登记' | '迁移'
+  createdAt: string
+}
+
+export type ConclusionStatus = '有效' | '待裁定' | '已失效' | '已驳回' | '已替换'
+
+export interface Conclusion {
+  id: string
+  equipmentId: string
+  itemId: string
+  result: InspectionStatus
+  measured: string
+  evidence: string
+  reviewer: string
+  authorizationId: string | null
+  authWindow: { validFrom: string; validTo: string } | null
+  authEquipmentIds: string[]
+  certDeps: Array<{ certificateId: string; version: number }>
+  defectDeps: Array<{ defectId: string; version: number }>
+  status: ConclusionStatus
+  source: '复核' | '迁移'
+  submittedAt: string
+}
+
+export interface SignBatch {
+  id: string
+  batchNo: string
+  signer: string
+  conclusionIds: string[]
+  status: '有效' | '已失效'
+  invalidatedReason: string
+  createdAt: string
+}
+
+export type ChainKind = '授权' | '结论' | '裁定' | '证书换版' | '缺陷重开' | '签署批次' | '迁移'
+
+export interface ChainEntry {
+  id: string
+  seq: number
+  kind: ChainKind
+  entityId: string
+  actor: string
+  summary: string
+  prevId: string | null
+  createdAt: string
+}

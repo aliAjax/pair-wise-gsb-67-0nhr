@@ -26,6 +26,9 @@ const navigate = (id: string) => navigateTo(`/equipment/${id}`)
       <article><span>不合格或待复验</span><strong>{{ store.stats.failed }}</strong><small>不可直接签署</small></article>
       <article><span>未闭环缺陷</span><strong>{{ store.stats.openDefects }}</strong><small>多方责任协同</small></article>
     </div>
+    <div v-if="store.pendingConclusions.length || store.pendingAuthorizations.length" class="alert-strip" @click="navigateTo('/chain')">
+      责任链待办：{{ store.pendingConclusions.length }}条结论待裁定 · {{ store.pendingAuthorizations.length }}条授权待确认，点击前往处理
+    </div>
     <div class="toolbar">
       <InputText v-model="store.keyword" placeholder="搜索设备、编号、验收项或状态" />
       <span>{{ isFetching ? '正在同步' : '设备快照已加载' }}</span>
